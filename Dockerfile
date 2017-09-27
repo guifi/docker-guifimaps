@@ -9,9 +9,9 @@ LABEL maintainer="roger.garcia@guifi.net"
 
 
 RUN apt-get update && apt-get dist-upgrade -y \
-  && apt-get install -y apache2 php7.0 \
-  php7.0-xml wget gosu \
-  git cron \
+  && apt-get install -y php7.0 \
+  php7.0-xml wget gosu mapserver \
+  git cron gdal-bin \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
@@ -30,5 +30,7 @@ COPY ./docker-entrypoint.sh /
 COPY ./guifimaps-entry.pl /
 
 EXPOSE 80
+
+WORKDIR /usr/share/guifimaps/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

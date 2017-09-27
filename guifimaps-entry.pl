@@ -28,10 +28,10 @@ if (! -e "INSTALLED") {
         die "Error changing permissions.\n";
     }
 
-    $output = `gosu $ENV{GMAPS_UNIX_USER} `;
+    $output = `gosu $ENV{GMAPS_UNIX_USER} ( crontab -l ; echo "30 18 * * * /bin/true" ) | crontab -`;
     if ($? != 0) {
         # Error
-        die "Error installing node deps.\n";
+        die "Error installing cron command.\n";
     }
 
     # make INSTALLED file
