@@ -8,9 +8,12 @@ developing with guifimaps services"
 LABEL maintainer="roger.garcia@guifi.net"
 
 
+ENV GMAPS_UNIX_USER fiberfy
+
+
 RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get install -y php7.0 \
-  php7.0-xml wget gosu mapserver \
+  php7.0-xml wget gosu cgi-mapserver \
   git cron gdal-bin \
   && apt-get clean \
   && apt-get autoremove \
