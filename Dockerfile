@@ -8,7 +8,7 @@ developing with guifimaps services"
 LABEL maintainer="roger.garcia@guifi.net"
 
 
-ENV GMAPS_UNIX_USER fiberfy
+ENV GMAPS_UNIX_USER gmaps
 
 
 RUN apt-get update && apt-get dist-upgrade -y \
@@ -18,6 +18,15 @@ RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
+
+# Copy apache conf file
+COPY ./guifimaps.conf /etc/apache2/sites-available/guifimaps.conf
+
+# Enable new site
+RUN a2enmod rewrite
+RUN a2enmod cgi
+RUN a2dissite 000-default.conf
+RUN a2ensite guifimaps.conf
 
 # Preparing development dir
 RUN mkdir /usr/share/guifimaps/
@@ -31,6 +40,7 @@ VOLUME /usr/share/guifimaps/
 # Copying Entrypoint scripts
 COPY ./docker-entrypoint.sh /
 COPY ./guifimaps-entry.pl /
+
 
 EXPOSE 80
 
