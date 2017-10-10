@@ -9,7 +9,7 @@ LABEL maintainer="roger.garcia@guifi.net"
 
 
 ENV GMAPS_UNIX_USER gmaps
-
+ENV GUIFI_WEB guifi.net
 
 RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get install -y php7.0 \
@@ -23,10 +23,10 @@ RUN apt-get update && apt-get dist-upgrade -y \
 COPY ./guifimaps.conf /etc/apache2/sites-available/guifimaps.conf
 
 # Enable new site
-RUN a2enmod rewrite
-RUN a2enmod cgi
-RUN a2dissite 000-default.conf
-RUN a2ensite guifimaps.conf
+RUN a2enmod rewrite \
+  && a2enmod cgi \
+  && a2dissite 000-default.conf \
+  && a2ensite guifimaps.conf
 
 # Preparing development dir
 RUN mkdir /usr/share/guifimaps/

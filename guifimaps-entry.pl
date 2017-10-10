@@ -16,7 +16,7 @@ if (! -e "INSTALLED") {
     }
 
     $output = `git init && git remote add origin https://github.com/guifi/guifimaps.git \\
-                && git fetch && git checkout -t origin/master`;
+                && git fetch && git checkout -t origin/docker`;
     if ($? != 0) {
         # Error
         die "Error getting code from git repository.\n";
