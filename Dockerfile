@@ -8,13 +8,13 @@ developing with guifimaps services"
 LABEL maintainer="roger.garcia@guifi.net"
 
 
-ENV GMAPS_UNIX_USER gmaps
+ENV GMAPS_UNIX_USER guifi
 ENV GUIFI_WEB guifi.net
 
 RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get install -y php7.0 \
   php7.0-xml wget gosu cgi-mapserver \
-  git cron gdal-bin \
+  git gdal-bin \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
@@ -28,22 +28,21 @@ RUN a2enmod rewrite \
   && a2dissite 000-default.conf \
   && a2ensite guifimaps.conf
 
-# Preparing development dir
-RUN mkdir /usr/share/guifimaps/
-
 # Creating UNIX User for fiberfy (security reasons)
 RUN groupadd --system $GMAPS_UNIX_USER && useradd --system --gid $GMAPS_UNIX_USER $GMAPS_UNIX_USER --create-home
 
 # Setting Volume
-VOLUME /usr/share/guifimaps/
+VOLUME /home/$GMAPS_UNIX_USER
 
 # Copying Entrypoint scripts
 COPY ./docker-entrypoint.sh /
 COPY ./guifimaps-entry.pl /
 
+# Copying utilities
+COPY ./refresh.sh /
 
 EXPOSE 80
 
-WORKDIR /usr/share/guifimaps/
+WORKDIR /home/$GMAPS_UNIX_USER
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
