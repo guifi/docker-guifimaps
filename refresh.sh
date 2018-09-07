@@ -1,3 +1,2 @@
 #!/bin/bash
-gosu $GMAPS_UNIX_USER bash -c 'cd /home/guifi/maps.guifi.net/guifimaps; php refresh.php > /dev/null 2>&1; cd data; rm -rf dlinks/*; rm -rf dnodes/*; ogr2ogr -f "ESRI Shapefile" dlinks dlinks.gml; ogr2ogr -f "ESRI Shapefile" dnodes dnodes.gml'
-chown -R $GMAPS_UNIX_USER:www-data /home/$GMAPS_UNIX_USER/maps.guifi.net/guifimaps/data
+cd /home/guifi/maps.guifi.net/guifimaps; php refresh.php > /dev/null 2>&1; cd data; rm -rf dlinks/*; rm -rf dnodes/*; rm -rf sites/*; rm -rf paths/*; ogr2ogr -f "ESRI Shapefile" dlinks dlinks.gml; ogr2ogr -f "ESRI Shapefile" dnodes dnodes.gml; ogr2ogr -f "ESRI Shapefile" -where "OGR_GEOMETRY='Point'" -nln sites sites fiberfy.geojson; ogr2ogr -f "ESRI Shapefile" -where "OGR_GEOMETRY='LineString'" -nln paths paths fiberfy.geojson

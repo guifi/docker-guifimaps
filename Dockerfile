@@ -9,12 +9,14 @@ LABEL maintainer="roger.garcia@guifi.net"
 
 
 ENV GMAPS_UNIX_USER guifi
+ENV GMAPS_USER_ID 1000
+ENV GMAPS_USER_GID 1000
 ENV GUIFI_WEB guifi.net
 
 RUN apt-get update && apt-get dist-upgrade -y \
   && apt-get install -y php7.0 \
   php7.0-xml wget gosu cgi-mapserver \
-  git gdal-bin \
+  git gdal-bin php7.0-curl \
   && apt-get clean \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*
@@ -28,8 +30,18 @@ RUN a2enmod rewrite \
   && a2dissite 000-default.conf \
   && a2ensite guifimaps.conf
 
-# Creating UNIX User for fiberfy (security reasons)
-RUN groupadd --system $GMAPS_UNIX_USER && useradd --system --gid $GMAPS_UNIX_USER $GMAPS_UNIX_USER --create-home
+  # Creating UNIX User for development (security reasons)
+  RUN groupadd --gid "${GMAPS_USER_GID}" "${GMAPS_UNIX_USER}" && \
+      useradd \
+        --uid ${GMAPS_USER_ID} \
+        --gid ${GMAPS_USER_GID} \
+        --create-home \
+        --shell /bin/bash \
+        ${GMAPS_UNIX_USER}
+
+# Copying script for setting userid and gid (host)
+COPY user-mapping.sh /
+RUN  chmod u+x user-mapping.sh
 
 # Setting Volume
 VOLUME /home/$GMAPS_UNIX_USER
